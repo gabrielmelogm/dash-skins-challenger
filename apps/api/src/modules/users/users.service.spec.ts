@@ -1,13 +1,15 @@
+import { ObjectId } from 'mongodb';
+import { Repository } from 'typeorm';
+
+import { faker } from '@faker-js/faker';
+
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { faker } from '@faker-js/faker';
 
 import { UsersService } from './users.service';
 import { User } from './entities/User.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ConflictException, NotFoundException } from '@nestjs/common';
-import { ObjectId } from 'mongodb';
 
 describe('Users Service', () => {
   let usersService: UsersService;
@@ -41,7 +43,7 @@ describe('Users Service', () => {
         avatar: faker.internet.url(),
       };
 
-      jest.spyOn(usersRepository, 'findOneOrFail').mockResolvedValue(null);
+      jest.spyOn(usersRepository, 'findOne').mockResolvedValue(null);
 
       jest
         .spyOn(usersRepository, 'create')
@@ -71,9 +73,7 @@ describe('Users Service', () => {
         avatar: faker.internet.url(),
       };
 
-      jest
-        .spyOn(usersRepository, 'findOneOrFail')
-        .mockResolvedValue(existingUser);
+      jest.spyOn(usersRepository, 'findOne').mockResolvedValue(existingUser);
 
       try {
         await usersService.Store(createUserDto);
@@ -86,7 +86,7 @@ describe('Users Service', () => {
 
   describe('FindById', () => {
     it('should find a user by id', async () => {
-      const id = new ObjectId();
+      const id = String(new ObjectId());
       const user = {
         _id: new ObjectId(),
         name: faker.person.firstName(),
@@ -101,11 +101,13 @@ describe('Users Service', () => {
       expect(result).toEqual(user);
     });
     it('should not be able get a user with nonexistent id', async () => {
-      const id = new ObjectId();
+      const id = String(new ObjectId());
       jest
         .spyOn(usersRepository, 'findOneOrFail')
         .mockRejectedValueOnce(new NotFoundException());
-      await expect(usersService.FindById(id)).resolves.toEqual(null);
+      await expect(usersService.FindById(id)).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
   });
 

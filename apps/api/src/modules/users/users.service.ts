@@ -31,13 +31,14 @@ export class UsersService {
   }
 
   async FindById(id: string): Promise<User> {
-    try {
-      return await this.usersRepository.findOneOrFail({
-        where: { _id: new ObjectId(id) },
-      });
-    } catch (error) {
-      new NotFoundException();
-      return null;
+    const user = await this.usersRepository.findOneOrFail({
+      where: { _id: new ObjectId(id) },
+    });
+
+    if (!user) {
+      throw new NotFoundException(null);
     }
+
+    return user;
   }
 }
