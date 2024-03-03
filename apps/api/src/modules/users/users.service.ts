@@ -30,10 +30,10 @@ export class UsersService {
     return await this.usersRepository.save(createdUser);
   }
 
-  async FindById(id: ObjectId): Promise<User> {
+  async FindById(id: string): Promise<User> {
     try {
       return await this.usersRepository.findOneOrFail({
-        where: { _id: id },
+        where: { _id: new ObjectId(id) },
       });
     } catch (error) {
       new NotFoundException();

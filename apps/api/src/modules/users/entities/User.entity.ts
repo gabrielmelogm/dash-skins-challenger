@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import {
   Column,
   CreateDateColumn,
@@ -6,12 +5,13 @@ import {
   Entity,
   ObjectIdColumn,
   UpdateDateColumn,
+  ObjectId,
 } from 'typeorm';
 
 @Entity()
 export class User {
   @ObjectIdColumn()
-  _id: ObjectId;
+  _id?: ObjectId;
 
   @Column()
   name: string;
