@@ -1,22 +1,38 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ObjectId } from 'mongodb';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ObjectIdColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Entity('users')
+@Entity()
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string
+  @ObjectIdColumn()
+  _id: ObjectId;
 
-  @Column('string')
-  name: string
+  @Column()
+  name: string;
 
-  @Column('int')
-  age: number
+  @Column()
+  age: number;
 
   @Column({
-    type: 'string',
-    unique: true
+    unique: true,
   })
-  email: string
+  email: string;
 
-  @Column('string')
-  avatar: string
+  @Column()
+  avatar: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt?: string;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt?: string;
+
+  @DeleteDateColumn({ name: 'deleted_at' })
+  deletedAt?: string;
 }

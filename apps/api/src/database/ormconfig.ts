@@ -1,11 +1,10 @@
-import { TypeOrmModuleOptions } from "@nestjs/typeorm";
-import { join } from "path";
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { User } from '../modules/users/entities/User.entity';
+import { env } from '../../env';
 
 export const ormConfig: TypeOrmModuleOptions = {
   type: 'mongodb',
-  host: 'localhost',
-  port: 27017,
-  database: 'dashskins',
-  synchronize: true,
-  entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-}
+  url: env.DATABASE_URL,
+  synchronize: env.NODE_ENV === 'development',
+  entities: [User],
+};
