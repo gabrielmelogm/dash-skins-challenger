@@ -2,7 +2,7 @@ import * as request from 'supertest';
 
 import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ObjectId } from 'mongodb';
 
@@ -38,7 +38,18 @@ describe('UsersController (e2e)', () => {
     await app.init();
   });
 
-  it('/users (POST)', () => {
-    return request(app.getHttpServer()).post('/users').send(user).expect(201);
+  it('/users (POST)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/users')
+      .send(user)
+      .expect(HttpStatus.CREATED);
+
+    const createdUser = response.body;
+
+    expect(createdUser).toHaveProperty('_id');
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 });

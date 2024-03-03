@@ -85,7 +85,7 @@ describe('Users Service', () => {
   });
 
   describe('FindById', () => {
-    it('should find a user by email', async () => {
+    it('should find a user by id', async () => {
       const id = new ObjectId();
       const user = {
         _id: new ObjectId(),
@@ -100,7 +100,7 @@ describe('Users Service', () => {
       const result = await usersService.FindById(id);
       expect(result).toEqual(user);
     });
-    it('should not be able get a user with nonexistent email', async () => {
+    it('should not be able get a user with nonexistent id', async () => {
       const id = new ObjectId();
       jest
         .spyOn(usersRepository, 'findOneOrFail')

@@ -18,7 +18,7 @@ export class UsersService {
   ) {}
 
   async Store(user: CreateUserDto): Promise<User> {
-    const getUser = await this.usersRepository.findOneOrFail({
+    const getUser = await this.usersRepository.findOne({
       where: {
         email: user.email,
       },
