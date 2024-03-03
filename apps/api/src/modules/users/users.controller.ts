@@ -6,10 +6,13 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/User.entity';
 import { UsersService } from './users.service';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateResult } from 'typeorm';
 
 @Controller('users')
 export class UsersController {
@@ -27,5 +30,13 @@ export class UsersController {
   @Get(':id')
   async FindByEmail(@Param('id') id: string): Promise<User> {
     return await this.usersService.FindById(id);
+  }
+
+  @Put(':id')
+  async Update(
+    @Param('id') id: string,
+    @Body() user: UpdateUserDto,
+  ): Promise<UpdateResult> {
+    return await this.usersService.Update(id, user);
   }
 }

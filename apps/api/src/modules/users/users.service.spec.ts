@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 import { faker } from '@faker-js/faker';
 
@@ -10,6 +10,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { UsersService } from './users.service';
 import { User } from './entities/User.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 describe('Users Service', () => {
   let usersService: UsersService;
@@ -112,8 +113,58 @@ describe('Users Service', () => {
   });
 
   describe('Update', () => {
-    it.todo('should be able update a user');
-    it.todo('should not be able update a does not exist user');
-    it.todo('should not be able update email');
+    it('should be able update a user', async () => {
+      const userExist = {
+        _id: new ObjectId(),
+        name: faker.person.firstName(),
+        age: faker.number.int({ min: 18, max: 100 }),
+        email: faker.internet.email(),
+        avatar: faker.internet.url(),
+      };
+
+      const updateUser: UpdateUserDto = {
+        name: faker.person.firstName(),
+        email: faker.internet.email(),
+        age: faker.number.int({ min: 18, max: 90 }),
+        avatar: faker.internet.url(),
+      };
+
+      const updateResult: UpdateResult = {
+        generatedMaps: [],
+        raw: {
+          acknowledged: true,
+          modifiedCount: 1,
+          upsertedId: null,
+          upsertedCount: 0,
+          matchedCount: 1,
+        },
+        affected: 1,
+      };
+
+      jest.spyOn(usersService, 'FindById').mockResolvedValue(userExist as User);
+      jest.spyOn(usersRepository, 'update').mockResolvedValue(updateResult);
+
+      await expect(
+        usersService.Update(String(userExist._id), updateUser),
+      ).resolves.toEqual(updateResult);
+    });
+    it('should not be able update a does not exist user', async () => {
+      const wrongId = faker.string.uuid();
+
+      const updateUser: UpdateUserDto = {
+        name: faker.person.firstName(),
+        email: faker.internet.email(),
+        age: faker.number.int({ min: 18, max: 90 }),
+        avatar: faker.internet.url(),
+      };
+
+      jest
+        .spyOn(usersService, 'FindById')
+        .mockRejectedValue(new NotFoundException());
+
+      await expect(usersService.Update(wrongId, updateUser)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
   });
 });
