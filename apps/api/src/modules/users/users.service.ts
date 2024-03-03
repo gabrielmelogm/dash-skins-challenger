@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/User.entity';
 import { Repository } from 'typeorm';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class UsersService {
@@ -17,7 +18,11 @@ export class UsersService {
   ) {}
 
   async Store(user: CreateUserDto): Promise<User> {
-    const getUser = await this.FindByEmail(user.email);
+    const getUser = await this.usersRepository.findOneOrFail({
+      where: {
+        email: user.email,
+      },
+    });
 
     if (getUser) throw new ConflictException('User with email already exists');
 
@@ -25,10 +30,10 @@ export class UsersService {
     return await this.usersRepository.save(createdUser);
   }
 
-  async FindByEmail(email: string): Promise<User> {
+  async FindById(id: ObjectId): Promise<User> {
     try {
       return await this.usersRepository.findOneOrFail({
-        where: { email },
+        where: { _id: id },
       });
     } catch (error) {
       new NotFoundException();

@@ -41,7 +41,8 @@ describe('Users Service', () => {
         avatar: faker.internet.url(),
       };
 
-      jest.spyOn(usersService, 'FindByEmail').mockResolvedValue(null);
+      jest.spyOn(usersRepository, 'findOneOrFail').mockResolvedValue(null);
+
       jest
         .spyOn(usersRepository, 'create')
         .mockReturnValue(createUserDto as User);
@@ -70,7 +71,9 @@ describe('Users Service', () => {
         avatar: faker.internet.url(),
       };
 
-      jest.spyOn(usersService, 'FindByEmail').mockResolvedValue(existingUser);
+      jest
+        .spyOn(usersRepository, 'findOneOrFail')
+        .mockResolvedValue(existingUser);
 
       try {
         await usersService.Store(createUserDto);
@@ -81,33 +84,28 @@ describe('Users Service', () => {
     });
   });
 
-  describe('FindByEmail', () => {
+  describe('FindById', () => {
     it('should find a user by email', async () => {
-      const email = faker.internet.email();
+      const id = new ObjectId();
       const user = {
         _id: new ObjectId(),
         name: faker.person.firstName(),
         age: faker.number.int({ min: 18, max: 100 }),
-        email,
+        email: faker.internet.email(),
         avatar: faker.internet.url(),
       };
-
       jest
         .spyOn(usersRepository, 'findOneOrFail')
         .mockResolvedValue(user as User);
-
-      const result = await usersService.FindByEmail(email);
-
+      const result = await usersService.FindById(id);
       expect(result).toEqual(user);
     });
     it('should not be able get a user with nonexistent email', async () => {
-      const email = faker.internet.email();
-
+      const id = new ObjectId();
       jest
         .spyOn(usersRepository, 'findOneOrFail')
         .mockRejectedValueOnce(new NotFoundException());
-
-      await expect(usersService.FindByEmail(email)).resolves.toEqual(null);
+      await expect(usersService.FindById(id)).resolves.toEqual(null);
     });
   });
 

@@ -10,6 +10,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/User.entity';
 import { UsersService } from './users.service';
+import { ObjectId } from 'mongodb';
 
 @Controller('users')
 export class UsersController {
@@ -24,8 +25,8 @@ export class UsersController {
     }
   }
 
-  @Get(':email')
-  async FindByEmail(@Param('email') email: string): Promise<User> {
-    return await this.usersService.FindByEmail(email);
+  @Get(':id')
+  async FindByEmail(@Param('id') id: string): Promise<User> {
+    return await this.usersService.FindById(new ObjectId(id));
   }
 }
