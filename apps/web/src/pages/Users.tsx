@@ -1,7 +1,7 @@
 import { DataTable } from '@/components/DataTable'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { UsersModal } from '@/components/users/UsersModal'
+import { CreateUserModal } from '@/components/users/CreateUserModal'
 import { getUsers, usersColumns } from '@/services/getUsers.service'
 import { useQuery } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
@@ -40,7 +40,7 @@ export function Users() {
 				<DataTable columns={usersColumns} data={data ?? []} />
 			</div>
 
-			<UsersModal open={Boolean(searchParams.get('modalOpen'))} />
+			<CreateUserModal open={Boolean(searchParams.get('modalOpen'))} />
 		</main>
 	)
 }

@@ -1,4 +1,4 @@
-import { InputProps } from '@/components/users/UsersModal'
+import { InputProps } from '@/components/users/CreateUserModal'
 import { api } from '@/lib/api'
 
 export async function createUser(user: InputProps): Promise<InputProps> {

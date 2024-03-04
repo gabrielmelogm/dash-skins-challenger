@@ -35,12 +35,12 @@ const inputsSchema = z.object({
 
 export type InputProps = z.infer<typeof inputsSchema>
 
-export function UsersModal({ open = false }: IUsersModalProps) {
+export function CreateUserModal({ open = false }: IUsersModalProps) {
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm({
+	} = useForm<InputProps>({
 		resolver: zodResolver(inputsSchema),
 	})
 	const { toast } = useToast()
@@ -98,27 +98,16 @@ export function UsersModal({ open = false }: IUsersModalProps) {
 						>
 							<InputContainer>
 								<Label htmlFor="name">Nome</Label>
-								<Input
-									{...register('name')}
-									id="name"
-									name="name"
-									defaultValue={faker.person.firstName()}
-								/>
+								<Input {...register('name')} id="name" name="name" />
 								{errors.name && (
-									<CaptionError>{errors.name.message as any}</CaptionError>
+									<CaptionError>{errors.email?.message}</CaptionError>
 								)}
 							</InputContainer>
 							<InputContainer>
 								<Label htmlFor="age">Idade</Label>
-								<Input
-									{...register('age')}
-									id="age"
-									name="age"
-									type="number"
-									defaultValue={faker.number.int({ min: 18, max: 90 })}
-								/>
+								<Input {...register('age')} id="age" name="age" type="number" />
 								{errors.age && (
-									<CaptionError>{errors.age.message as any}</CaptionError>
+									<CaptionError>{errors.age?.message}</CaptionError>
 								)}
 							</InputContainer>
 							<InputContainer>
@@ -128,23 +117,17 @@ export function UsersModal({ open = false }: IUsersModalProps) {
 									id="email"
 									name="email"
 									type="email"
-									defaultValue={faker.internet.email()}
 								/>
 								{errors.email && (
-									<CaptionError>{errors.email.message as any}</CaptionError>
+									<CaptionError>{errors.email?.message}</CaptionError>
 								)}
 							</InputContainer>
 
 							<InputContainer>
 								<Label htmlFor="avatar">Avatar</Label>
-								<Input
-									{...register('avatar')}
-									id="avatar"
-									name="avatar"
-									defaultValue={faker.image.urlLoremFlickr()}
-								/>
+								<Input {...register('avatar')} id="avatar" name="avatar" />
 								{errors.avatar && (
-									<CaptionError>{errors.avatar.message as any}</CaptionError>
+									<CaptionError>{errors.avatar?.message}</CaptionError>
 								)}
 							</InputContainer>
 
