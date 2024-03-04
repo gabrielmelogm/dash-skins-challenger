@@ -1,13 +1,13 @@
-import { ConfigModule } from '@nestjs/config';
-import { z } from 'zod';
+import { ConfigModule } from '@nestjs/config'
+import { z } from 'zod'
 
-ConfigModule.forRoot();
+ConfigModule.forRoot()
 
-const nodeEnv = z.enum(['development', 'production', 'test']);
+const nodeEnv = z.enum(['development', 'production', 'test'])
 
 const envSchema = z.object({
-  NODE_ENV: nodeEnv.default('development'),
-  DATABASE_URL: z.string(),
-});
+	NODE_ENV: nodeEnv.default('development'),
+	DATABASE_URL: z.string(),
+})
 
-export const env = envSchema.parse(process.env);
+export const env = envSchema.parse(process.env)
