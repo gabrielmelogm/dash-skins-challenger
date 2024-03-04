@@ -1,4 +1,6 @@
+import { hashSync } from 'bcrypt'
 import {
+	BeforeInsert,
 	Column,
 	CreateDateColumn,
 	DeleteDateColumn,
@@ -27,6 +29,9 @@ export class User {
 	@Column()
 	avatar: string
 
+	@Column()
+	password: string
+
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt?: string
 
@@ -35,4 +40,9 @@ export class User {
 
 	@DeleteDateColumn({ name: 'deleted_at' })
 	deletedAt?: string
+
+	@BeforeInsert()
+	hashPassword() {
+		this.password = hashSync(this.password, 10)
+	}
 }

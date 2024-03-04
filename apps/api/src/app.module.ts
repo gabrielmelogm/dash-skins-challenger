@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { ormConfig } from './database/ormconfig'
+import { UsersSeed } from './database/seeds/users.seed'
+import { User } from './modules/users/entities/User.entity'
 import { UsersModule } from './modules/users/users.module'
 
 @Module({
@@ -11,9 +13,10 @@ import { UsersModule } from './modules/users/users.module'
 			isGlobal: true,
 		}),
 		TypeOrmModule.forRoot(ormConfig),
+		TypeOrmModule.forFeature([User]),
 		UsersModule,
 	],
 	controllers: [],
-	providers: [],
+	providers: [UsersSeed],
 })
 export class AppModule {}
