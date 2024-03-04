@@ -1,18 +1,18 @@
+import { InputContainer } from '@/components/input/InputContainer'
 import { createUser } from '@/services/createUser.service'
-import { faker } from '@faker-js/faker'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
-import { CaptionError } from '../CaptionError'
-import { Button } from '../ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Dialog, DialogContent } from '../ui/dialog'
-import { Input } from '../ui/input'
-import { Label } from '../ui/label'
-import { useToast } from '../ui/use-toast'
+import { CaptionError } from '../../input/CaptionError'
+import { Button } from '../../ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card'
+import { Dialog, DialogContent } from '../../ui/dialog'
+import { Input } from '../../ui/input'
+import { Label } from '../../ui/label'
+import { useToast } from '../../ui/use-toast'
 
 interface IUsersModalProps {
 	open: boolean
@@ -146,11 +146,5 @@ export function CreateUserModal({ open = false }: IUsersModalProps) {
 				</Card>
 			</DialogContent>
 		</Dialog>
-	)
-}
-
-function InputContainer({ children }: { children: ReactNode }) {
-	return (
-		<div className="grid w-full max-w-sm items-center gap-2">{children}</div>
 	)
 }

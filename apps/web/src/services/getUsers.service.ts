@@ -1,6 +1,4 @@
 import { api } from '@/lib/api'
-import { faker } from '@faker-js/faker'
-import { ColumnDef } from '@tanstack/react-table'
 import { z } from 'zod'
 
 const userSchema = z.object({
@@ -22,18 +20,3 @@ export async function getUsers(): Promise<IUserProps[]> {
 
 	return users
 }
-
-export const usersColumns: ColumnDef<IUserProps>[] = [
-	{
-		accessorKey: 'name',
-		header: 'Nome',
-	},
-	{
-		accessorKey: 'age',
-		header: 'Idade',
-	},
-	{
-		accessorKey: 'email',
-		header: 'E-mail',
-	},
-]

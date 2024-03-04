@@ -1,8 +1,10 @@
 import { DataTable } from '@/components/DataTable'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { CreateUserModal } from '@/components/users/CreateUserModal'
-import { getUsers, usersColumns } from '@/services/getUsers.service'
+import { usersColumns } from '@/components/users/columns'
+import { CreateUserModal } from '@/components/users/modal/CreateUserModal'
+import { UpdateUserModal } from '@/components/users/modal/UpdateUserModal'
+import { IUserProps, getUsers } from '@/services/getUsers.service'
 import { useQuery } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
 
@@ -25,6 +27,16 @@ export function Users() {
 		})
 	}
 
+	function getUserById(): IUserProps | null {
+		const userId = searchParams.get('modalEdit')
+
+		if (!userId) return null
+
+		return data?.filter(
+			(currentUser) => currentUser._id === userId,
+		)[0] as IUserProps
+	}
+
 	return (
 		<main className="dark:bg-black w-full min-h-screen">
 			<div className="w-full flex items-center justify-between px-48 py-8 border-b border-b-zinc-700">
@@ -41,6 +53,10 @@ export function Users() {
 			</div>
 
 			<CreateUserModal open={Boolean(searchParams.get('modalOpen'))} />
+			<UpdateUserModal
+				open={Boolean(searchParams.get('modalEdit')) && Boolean(getUserById())}
+				userSelected={getUserById()}
+			/>
 		</main>
 	)
 }
