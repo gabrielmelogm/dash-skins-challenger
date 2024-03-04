@@ -1,16 +1,13 @@
 import { DataTable } from '@/components/DataTable'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { IUserProps, getUsers, usersColumns } from '@/services/getUsers.service'
-import { useEffect, useState } from 'react'
+import { getUsers, usersColumns } from '@/services/getUsers.service'
+import { useQuery } from 'react-query'
 
 export function Users() {
-	const [data, setData] = useState<IUserProps[]>([])
-
-	useEffect(() => {
-		const response = getUsers()
-		setData(response)
-	}, [])
+	const { data } = useQuery('getUsers', () => {
+		return getUsers()
+	})
 
 	return (
 		<main className="dark:bg-black w-full min-h-screen">
@@ -24,7 +21,7 @@ export function Users() {
 
 			<div className="px-48 py-12 flex flex-col gap-6">
 				<Input type="search" name="search" placeholder="Pesquisar..." />
-				<DataTable columns={usersColumns} data={data} />
+				<DataTable columns={usersColumns} data={data ?? []} />
 			</div>
 		</main>
 	)

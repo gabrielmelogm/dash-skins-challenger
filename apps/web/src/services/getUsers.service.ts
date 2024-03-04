@@ -1,3 +1,4 @@
+import { api } from '@/lib/api'
 import { faker } from '@faker-js/faker'
 import { ColumnDef } from '@tanstack/react-table'
 import { z } from 'zod'
@@ -14,23 +15,10 @@ const listUsersSchema = userSchema.array()
 
 export type IUserProps = z.infer<typeof userSchema>
 
-export function getUsers(): IUserProps[] {
-	const limit = 10
-	const list: IUserProps[] = []
+export async function getUsers(): Promise<IUserProps[]> {
+	const listUsers = await api.get('/users')
 
-	for (let i = 0; i < limit; i++) {
-		const data: IUserProps = {
-			_id: faker.string.uuid(),
-			name: faker.person.firstName(),
-			email: faker.internet.email(),
-			age: faker.number.int({ min: 18, max: 90 }),
-			avatar: faker.internet.url(),
-		}
-
-		list.push(data)
-	}
-
-	const users = listUsersSchema.parse(list)
+	const users = listUsersSchema.parse(listUsers.data)
 
 	return users
 }
