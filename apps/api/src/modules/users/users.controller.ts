@@ -27,6 +27,11 @@ export class UsersController {
     }
   }
 
+  @Get()
+  async FindAll(): Promise<User[]> {
+    return await this.usersService.FindAll();
+  }
+
   @Get(':id')
   async FindByEmail(@Param('id') id: string): Promise<User> {
     return await this.usersService.FindById(id);

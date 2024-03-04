@@ -10,7 +10,6 @@ import { User } from '../src/modules/users/entities/User.entity';
 import { UsersController } from '../src/modules/users/users.controller';
 import { UsersService } from '../src/modules/users/users.service';
 import { testOrmConfig } from '../src/database/ormconfig';
-import { UpdateResult } from 'typeorm';
 
 describe('UsersController (e2e)', () => {
   let app: INestApplication;
@@ -44,6 +43,39 @@ describe('UsersController (e2e)', () => {
     const createdUser = response.body;
 
     expect(createdUser).toHaveProperty('_id');
+  });
+
+  it('(GET) /users', async () => {
+    const listUsers: User[] = [];
+
+    for (let i; i < 2; i++) {
+      const data = await request(app.getHttpServer())
+        .post('/users')
+        .send({
+          name: faker.person.firstName(),
+          email: faker.internet.email(),
+          age: faker.number.int({ min: 18, max: 90 }),
+          avatar: faker.internet.url(),
+        })
+        .expect(HttpStatus.CREATED);
+      listUsers.push(data.body);
+    }
+
+    const response = await request(app.getHttpServer())
+      .get('/users')
+      .expect(HttpStatus.OK);
+
+    const users: User[] = response.body;
+
+    expect(Array.isArray(users)).toBe(true);
+
+    for (const user of users) {
+      expect(user).toHaveProperty('_id');
+      expect(user).toHaveProperty('name');
+      expect(user).toHaveProperty('email');
+      expect(user).toHaveProperty('age');
+      expect(user).toHaveProperty('avatar');
+    }
   });
 
   it('(GET) /users/:id', async () => {
