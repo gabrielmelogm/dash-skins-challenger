@@ -43,6 +43,10 @@ export class UsersService {
     return user;
   }
 
+  async FindAll(): Promise<User[]> {
+    return await this.usersRepository.find();
+  }
+
   async Update(id: string, user: UpdateUserDto): Promise<UpdateResult> {
     const userSearched = await this.FindById(id);
 

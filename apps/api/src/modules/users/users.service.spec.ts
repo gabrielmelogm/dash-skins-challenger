@@ -35,6 +35,33 @@ describe('Users Service', () => {
     expect(usersService).toBeDefined();
   });
 
+  describe('FindAll', () => {
+    it('should be able get all users', async () => {
+      const usersResult: User[] = [];
+
+      for (let i = 10; i < 10; i++) {
+        const data: User = {
+          _id: new ObjectId(),
+          name: faker.person.firstName(),
+          email: faker.internet.email(),
+          age: faker.number.int({ min: 18, max: 90 }),
+          avatar: faker.internet.url(),
+          createdAt: String(faker.date.recent()),
+          updatedAt: String(faker.date.recent()),
+        };
+        usersResult.push(data);
+      }
+
+      jest.spyOn(usersRepository, 'find').mockResolvedValue(usersResult);
+      await expect(usersService.FindAll()).resolves.toEqual(usersResult);
+    });
+
+    it('should return an empty array if no users are found', async () => {
+      jest.spyOn(usersRepository, 'find').mockResolvedValueOnce([]);
+      await expect(usersService.FindAll()).resolves.toEqual([]);
+    });
+  });
+
   describe('Store', () => {
     it('should create a new user', async () => {
       const createUserDto: CreateUserDto = {
