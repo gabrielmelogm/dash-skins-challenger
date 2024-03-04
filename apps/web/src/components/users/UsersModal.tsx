@@ -2,7 +2,7 @@ import { createUser } from '@/services/createUser.service'
 import { faker } from '@faker-js/faker'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Dialog, DialogContent } from '../ui/dialog'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
+import { useToast } from '../ui/use-toast'
 
 interface IUsersModalProps {
 	open: boolean
@@ -42,6 +43,7 @@ export function UsersModal({ open = false }: IUsersModalProps) {
 	} = useForm({
 		resolver: zodResolver(inputsSchema),
 	})
+	const { toast } = useToast()
 
 	const [searchParams, setSearchParams] = useSearchParams()
 	const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -60,18 +62,21 @@ export function UsersModal({ open = false }: IUsersModalProps) {
 	async function onSubmit(data: any) {
 		setIsLoading(true)
 		const fields: InputProps = data
-		await createUser({
-			name: fields.name,
-			email: fields.email,
-			age: fields.age,
-			avatar: fields.avatar,
-		})
+		await createUser(fields)
 			.then(() => {
-				alert('Usuário criado com sucesso!')
+				toast({
+					title: 'Usuário criado com sucesso!',
+					variant: 'success',
+				})
 				handleCloseModal()
 			})
 			.catch(() => {
-				alert('Houve um erro ao criar um novo usuário')
+				toast({
+					title: 'Erro ao criar um novo usuário',
+					description:
+						'Houve um erro inesperado ao criar um usuário, tente novamente mais tarde',
+					variant: 'destructive',
+				})
 			})
 			.finally(() => {
 				setIsLoading(false)
