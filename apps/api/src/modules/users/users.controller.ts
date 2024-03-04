@@ -7,7 +7,9 @@ import {
 	Param,
 	Post,
 	Put,
+	Res,
 } from '@nestjs/common'
+import { Response } from 'express'
 import { UpdateResult } from 'typeorm'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -19,10 +21,19 @@ export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
 	@Post()
-	async Store(@Body() user: CreateUserDto): Promise<User | HttpException> {
+	async Store(
+		@Body() user: CreateUserDto,
+		@Res() response: Response,
+	): Promise<any> {
 		try {
 			return await this.usersService.Store(user)
 		} catch (error) {
+			if (error.message === 'User with email already exists') {
+				return response
+					.status(HttpStatus.CONFLICT)
+					.send(new HttpException(error.message, HttpStatus.CONFLICT))
+			}
+
 			return new HttpException(error?.message, HttpStatus.BAD_REQUEST)
 		}
 	}
