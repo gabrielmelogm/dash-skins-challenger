@@ -1,8 +1,9 @@
 import { InputContainer } from '@/components/input/InputContainer'
-import { createUser } from '@/services/createUser.service'
+import { useUsers } from '@/hooks/useUsers'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { AxiosError } from 'axios'
 import { Loader2 } from 'lucide-react'
-import { ReactNode, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { z } from 'zod'
@@ -36,10 +37,12 @@ const inputsSchema = z.object({
 export type InputProps = z.infer<typeof inputsSchema>
 
 export function CreateUserModal({ open = false }: IUsersModalProps) {
+	const { createUser } = useUsers()
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
+		reset,
 	} = useForm<InputProps>({
 		resolver: zodResolver(inputsSchema),
 	})
@@ -64,13 +67,23 @@ export function CreateUserModal({ open = false }: IUsersModalProps) {
 		const fields: InputProps = data
 		await createUser(fields)
 			.then(() => {
+				reset()
 				toast({
 					title: 'Usuário criado com sucesso!',
 					variant: 'success',
 				})
 				handleCloseModal()
 			})
-			.catch(() => {
+			.catch((error: AxiosError) => {
+				if (error.response?.status === 409) {
+					toast({
+						title: 'Email indisponível',
+						description: 'O email informado já está sendo usado por um usuário',
+						variant: 'destructive',
+					})
+
+					return
+				}
 				toast({
 					title: 'Erro ao criar um novo usuário',
 					description:

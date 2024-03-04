@@ -4,16 +4,14 @@ import { Input } from '@/components/ui/input'
 import { usersColumns } from '@/components/users/columns'
 import { CreateUserModal } from '@/components/users/modal/CreateUserModal'
 import { UpdateUserModal } from '@/components/users/modal/UpdateUserModal'
-import { IUserProps, getUsers } from '@/services/getUsers.service'
-import { useQuery } from 'react-query'
+import { useUsers } from '@/hooks/useUsers'
+import { IUserProps } from '@/services/getUsers.service'
 import { useSearchParams } from 'react-router-dom'
 
 export function Users() {
-	const [searchParams, setSearchParams] = useSearchParams()
+	const { users: data } = useUsers()
 
-	const { data } = useQuery('getUsers', () => {
-		return getUsers()
-	})
+	const [searchParams, setSearchParams] = useSearchParams()
 
 	function handleOpenModal() {
 		setSearchParams((state) => {
