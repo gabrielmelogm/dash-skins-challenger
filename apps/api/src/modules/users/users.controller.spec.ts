@@ -10,7 +10,7 @@ import { CreateUserDto } from './dto/create-user.dto'
 import { User } from './entities/User.entity'
 import { UsersController } from './users.controller'
 import { UsersModule } from './users.module'
-import { UsersService } from './users.service'
+import { IUserResponse, UsersService } from './users.service'
 
 describe('UsersController', () => {
 	let usersController: UsersController
@@ -41,6 +41,30 @@ describe('UsersController', () => {
 
 	it('should be able the controller is defined', () => {
 		expect(usersController).toBeDefined()
+	})
+
+	describe('GET - FindAll', () => {
+		it('should return all users', async () => {
+			const userList: IUserResponse[] = []
+
+			for (let i: number; i < 2; i++) {
+				const userData: IUserResponse = {
+					_id: new ObjectId(),
+					name: faker.person.firstName(),
+					age: faker.number.int({ min: 18, max: 90 }),
+					email: faker.internet.email(),
+					avatar: faker.image.urlLoremFlickr(),
+				}
+				userList.push(userData)
+			}
+
+			jest.spyOn(usersService, 'FindAll').mockResolvedValueOnce(userList)
+
+			const response = await usersController.FindAll()
+
+			expect(response).toEqual(userList)
+			expect(usersService.FindAll).toHaveBeenCalled()
+		})
 	})
 
 	describe('POST - Store', () => {
