@@ -250,6 +250,11 @@ describe('UsersController (e2e)', () => {
 		const deletedUser = response.body
 
 		expect(deletedUser).toStrictEqual(expectedResponse)
+
+		await request(app.getHttpServer())
+			.get(`/users/${userId}`)
+			.set('Authorization', authToken)
+			.expect(HttpStatus.NOT_FOUND)
 	})
 
 	afterAll(async () => {
