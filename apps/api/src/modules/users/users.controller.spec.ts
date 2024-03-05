@@ -44,6 +44,7 @@ describe('UsersController', () => {
 				email: faker.internet.email(),
 				age: faker.number.int({ min: 18, max: 90 }),
 				avatar: faker.image.urlLoremFlickr(),
+				password: 'Senha@123',
 			}
 
 			const response = {

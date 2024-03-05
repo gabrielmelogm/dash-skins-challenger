@@ -7,6 +7,7 @@ import { ConflictException, NotFoundException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
 
+import { hashSync } from 'bcrypt'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/User.entity'
@@ -69,6 +70,7 @@ describe('Users Service', () => {
 				age: faker.number.int({ min: 18, max: 100 }),
 				email: faker.internet.email(),
 				avatar: faker.internet.url(),
+				password: 'Senha@123',
 			}
 
 			jest.spyOn(usersRepository, 'findOne').mockResolvedValue(null)
@@ -99,6 +101,7 @@ describe('Users Service', () => {
 				age: faker.number.int({ min: 18, max: 100 }),
 				email: existingUser.email,
 				avatar: faker.internet.url(),
+				password: 'Senha@123',
 			}
 
 			jest.spyOn(usersRepository, 'findOne').mockResolvedValue(existingUser)
@@ -152,6 +155,7 @@ describe('Users Service', () => {
 				age: faker.number.int({ min: 18, max: 100 }),
 				email: faker.internet.email(),
 				avatar: faker.internet.url(),
+				password: hashSync(faker.internet.password(), 10),
 			}
 
 			const updateUser: UpdateUserDto = {

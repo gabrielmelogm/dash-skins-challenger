@@ -30,7 +30,7 @@ export class User {
 	avatar: string
 
 	@Column()
-	password: string
+	password?: string
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt?: string
@@ -42,7 +42,7 @@ export class User {
 	deletedAt?: string
 
 	@BeforeInsert()
-	hashPassword() {
+	hashPassword?() {
 		this.password = hashSync(this.password, 10)
 	}
 }

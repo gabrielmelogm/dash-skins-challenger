@@ -12,7 +12,7 @@ import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/User.entity'
 
 export type IUserResponse = {
-	_id: ObjectId
+	_id?: ObjectId
 	name: string
 	age: number
 	email: string
