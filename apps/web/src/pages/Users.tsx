@@ -9,7 +9,7 @@ import { UpdateUserModal } from '@/components/users/modal/UpdateUserModal'
 import { useAuthentication } from '@/hooks/useAuth'
 import { useUsers } from '@/hooks/useUsers'
 import { IUserProps } from '@/services/getUsers.service'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 export function Users() {
@@ -37,9 +37,11 @@ export function Users() {
 
 		if (!userId) return null
 
-		return data?.filter(
+		const searchedUser = data?.filter(
 			(currentUser) => currentUser._id === userId,
 		)[0] as IUserProps
+
+		return searchedUser
 	}
 
 	useEffect(() => {

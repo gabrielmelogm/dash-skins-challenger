@@ -52,6 +52,7 @@ export function UpdateUserModal({
 		register,
 		handleSubmit,
 		formState: { errors },
+		resetField,
 	} = useForm<UpdateUserProps>({
 		resolver: zodResolver(inputsSchema),
 	})
@@ -61,6 +62,10 @@ export function UpdateUserModal({
 	const [isLoading, setIsLoading] = useState<boolean>(false)
 
 	function handleCloseModal() {
+		resetField('name')
+		resetField('age')
+		resetField('email')
+		resetField('avatar')
 		setSearchParams((state) => {
 			if (typeof searchParams.get('modalEdit') === 'string') {
 				state.delete('modalEdit')
