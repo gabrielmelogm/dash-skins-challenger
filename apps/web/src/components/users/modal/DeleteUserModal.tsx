@@ -18,11 +18,13 @@ import { useSearchParams } from 'react-router-dom'
 interface IDeleteUserModalProps {
 	open: boolean
 	userSelected: IUserProps | null
+	onDeleteUser: (userId: string | null) => void
 }
 
 export function DeleteUserModal({
 	open = false,
 	userSelected,
+	onDeleteUser,
 }: IDeleteUserModalProps) {
 	const { deleteUser } = useUsers()
 
@@ -50,6 +52,7 @@ export function DeleteUserModal({
 					variant: 'success',
 				})
 				handleCloseModal()
+				onDeleteUser(userSelected._id)
 			})
 			.catch((error) => {
 				toast({

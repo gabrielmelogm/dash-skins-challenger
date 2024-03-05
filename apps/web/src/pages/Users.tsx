@@ -10,16 +10,19 @@ import { UpdateUserModal } from '@/components/users/modal/UpdateUserModal'
 import { useAuthentication } from '@/hooks/useAuth'
 import { useUsers } from '@/hooks/useUsers'
 import { IUserProps } from '@/services/getUsers.service'
-import { useEffect } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 export function Users() {
 	const navigate = useNavigate()
+	const queryClient = useQueryClient()
 
 	const { users: data } = useUsers()
 	const { user } = useAuthentication()
 
 	const [searchParams, setSearchParams] = useSearchParams()
+	const [deletedUser, setDeletedUser] = useState<string | null>(null)
 
 	function handleOpenModal() {
 		setSearchParams((state) => {
@@ -59,6 +62,17 @@ export function Users() {
 		}
 	}, [user])
 
+	useEffect(() => {
+		if (deletedUser) {
+			setTimeout(() => {
+				setDeletedUser(null)
+				queryClient.invalidateQueries({
+					queryKey: ['getUsers'],
+				})
+			}, 1000)
+		}
+	}, [deletedUser])
+
 	return (
 		<main className="w-full min-h-screen">
 			<div className="py-8 px-8 w-full flex items-center justify-between md:px-48 md:py-8 border-b border-b-zinc-700">
@@ -73,9 +87,12 @@ export function Users() {
 
 			<div className="px-8 py-6 w-full md:px-48 md:py-12">
 				<div className="overflow-x-auto md:overflow-x-auto max-w-[1500px] min-w-[350px] flex flex-col gap-6 ">
-					<Input type="search" name="search" placeholder="Pesquisar..." />
 					<div className="min-w-[600px]">
-						<DataTable columns={usersColumns} data={data ?? []} />
+						<DataTable
+							columns={usersColumns}
+							data={data ?? []}
+							deleteRow={deletedUser}
+						/>
 					</div>
 				</div>
 			</div>
@@ -90,6 +107,7 @@ export function Users() {
 					Boolean(searchParams.get('modalDelete')) && Boolean(getUserById())
 				}
 				userSelected={getUserById()}
+				onDeleteUser={setDeletedUser}
 			/>
 		</main>
 	)

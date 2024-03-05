@@ -68,11 +68,7 @@ export function UsersProvider({ children }: { children: ReactNode }) {
 	}
 
 	async function deleteUser(id: string) {
-		await handleDeleteUser(id).then(() => {
-			queryClient.invalidateQueries({
-				queryKey: ['getUsers'],
-			})
-		})
+		await handleDeleteUser(id)
 	}
 
 	return (

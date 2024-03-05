@@ -1,3 +1,5 @@
+import '../styles/animations.css'
+
 import {
 	ColumnDef,
 	flexRender,
@@ -17,11 +19,13 @@ import {
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[]
 	data: TData[]
+	deleteRow?: string | null
 }
 
 export function DataTable<TData, TValue>({
 	columns,
 	data,
+	deleteRow,
 }: DataTableProps<TData, TValue>) {
 	const table = useReactTable({
 		data,
@@ -50,21 +54,30 @@ export function DataTable<TData, TValue>({
 						</TableRow>
 					))}
 				</TableHeader>
-				<TableBody className="bg-[#0a0a0a]">
+				<TableBody className="dark:bg-[#0a0a0a]">
 					{table.getRowModel().rows?.length ? (
-						table.getRowModel().rows.map((row) => (
-							<TableRow
-								key={row.id}
-								data-state={row.getIsSelected() && 'selected'}
-								className="text-white"
-							>
-								{row.getVisibleCells().map((cell) => (
-									<TableCell key={cell.id}>
-										{flexRender(cell.column.columnDef.cell, cell.getContext())}
-									</TableCell>
-								))}
-							</TableRow>
-						))
+						table.getRowModel().rows.map((row) => {
+							const id = row.original._id
+
+							return (
+								<TableRow
+									key={row.id}
+									data-state={row.getIsSelected() && 'selected'}
+									className={`${
+										id === deleteRow ? 'row-delete' : ''
+									} text-white`}
+								>
+									{row.getVisibleCells().map((cell) => (
+										<TableCell key={cell.id}>
+											{flexRender(
+												cell.column.columnDef.cell,
+												cell.getContext(),
+											)}
+										</TableCell>
+									))}
+								</TableRow>
+							)
+						})
 					) : (
 						<TableRow>
 							<TableCell
