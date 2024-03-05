@@ -8,7 +8,7 @@ import { testOrmConfig } from '../src/database/ormconfig'
 import { AuthModule } from '../src/modules/auth/auth.module'
 import { UsersModule } from '../src/modules/users/users.module'
 import { UsersService } from '../src/modules/users/users.service'
-import { user } from './user'
+import { user } from './user.factory'
 
 describe('Auth (e2e)', () => {
 	let app: INestApplication
