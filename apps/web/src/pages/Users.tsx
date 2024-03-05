@@ -1,15 +1,22 @@
+import Cookies from 'js-cookie'
+
 import { DataTable } from '@/components/DataTable'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { usersColumns } from '@/components/users/columns'
 import { CreateUserModal } from '@/components/users/modal/CreateUserModal'
 import { UpdateUserModal } from '@/components/users/modal/UpdateUserModal'
+import { useAuthentication } from '@/hooks/useAuth'
 import { useUsers } from '@/hooks/useUsers'
 import { IUserProps } from '@/services/getUsers.service'
-import { useSearchParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 export function Users() {
+	const navigate = useNavigate()
+
 	const { users: data } = useUsers()
+	const { user } = useAuthentication()
 
 	const [searchParams, setSearchParams] = useSearchParams()
 
@@ -34,6 +41,13 @@ export function Users() {
 			(currentUser) => currentUser._id === userId,
 		)[0] as IUserProps
 	}
+
+	useEffect(() => {
+		const token = Cookies.get('dashskins.token')
+		if (!token) {
+			navigate('login')
+		}
+	}, [user])
 
 	return (
 		<main className="dark:bg-black w-full min-h-screen">

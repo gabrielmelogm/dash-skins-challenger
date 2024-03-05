@@ -24,6 +24,9 @@
 			},
 			"style": {
 				"useSelfClosingElements": "warn"
+			},
+			"correctness": {
+				"useExhaustiveDependencies": "warn"
 			}
 		}
 	},

@@ -2,7 +2,8 @@ import { InputProps } from '@/components/users/modal/CreateUserModal'
 import { createUser as handleCreateUser } from '@/services/createUser.service'
 import { IUserProps, getUsers } from '@/services/getUsers.service'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { ReactNode, createContext, useContext } from 'react'
+import { ReactNode, createContext, useContext, useEffect } from 'react'
+import { useAuthentication } from './useAuth'
 
 interface UsersProps {
 	users: IUserProps[]
@@ -12,14 +13,18 @@ interface UsersProps {
 const Users = createContext({} as UsersProps)
 
 export function UsersProvider({ children }: { children: ReactNode }) {
+	const { user } = useAuthentication()
 	const queryClient = useQueryClient()
+
+	let users: IUserProps[] = []
 
 	const { data } = useQuery({
 		queryKey: ['getUsers'],
 		queryFn: async () => await getUsers(),
+		enabled: !!user,
 	})
 
-	const users = data ?? []
+	users = data ?? []
 
 	const { mutateAsync: handleCreateUserFn } = useMutation({
 		mutationFn: handleCreateUser,
