@@ -4,9 +4,10 @@ import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm'
 import { faker } from '@faker-js/faker'
 import { HttpException, HttpStatus } from '@nestjs/common'
 import { ObjectId } from 'mongodb'
-import { Repository } from 'typeorm'
+import { Repository, UpdateResult } from 'typeorm'
 import { ormConfig, testOrmConfig } from '../../database/ormconfig'
 import { CreateUserDto } from './dto/create-user.dto'
+import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/User.entity'
 import { UsersController } from './users.controller'
 import { UsersModule } from './users.module'
@@ -138,6 +139,40 @@ describe('UsersController', () => {
 					HttpStatus.CONFLICT,
 				),
 			)
+		})
+	})
+
+	describe('PUT/:id - Update', () => {
+		it('should be able update a user', async () => {
+			const userId: string = String(new ObjectId())
+
+			const updateUserDto: UpdateUserDto = {
+				name: faker.person.firstName(),
+				email: faker.internet.email(),
+				age: faker.number.int({ min: 18, max: 90 }),
+				avatar: faker.image.urlLoremFlickr(),
+			}
+
+			const updateResult: UpdateResult = {
+				generatedMaps: [],
+				raw: {
+					acknowledged: true,
+					modifiedCount: 1,
+					upsertedId: null,
+					upsertedCount: 0,
+					matchedCount: 1,
+				},
+				affected: 1,
+			}
+
+			jest
+				.spyOn(usersService, 'Update')
+				.mockResolvedValue(updateResult as UpdateResult)
+
+			const response = await usersController.Update(userId, updateUserDto)
+
+			expect(response).toEqual(updateResult)
+			expect(usersService.Update).toHaveBeenCalledWith(userId, updateUserDto)
 		})
 	})
 })
