@@ -55,7 +55,7 @@ export class UsersController {
 	}
 
 	@Get(':id')
-	async FindByEmail(@Param('id') id: string): Promise<IUserResponse> {
+	async FindById(@Param('id') id: string): Promise<IUserResponse> {
 		return await this.usersService.FindById(id)
 	}
 

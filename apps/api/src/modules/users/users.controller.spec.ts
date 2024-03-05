@@ -67,6 +67,25 @@ describe('UsersController', () => {
 		})
 	})
 
+	describe('GET/:id - FindById', () => {
+		it('should be able get a user', async () => {
+			const userData: IUserResponse = {
+				_id: new ObjectId(),
+				name: faker.person.firstName(),
+				age: faker.number.int({ min: 18, max: 90 }),
+				email: faker.internet.email(),
+				avatar: faker.image.urlLoremFlickr(),
+			}
+
+			jest.spyOn(usersService, 'FindById').mockResolvedValueOnce(userData)
+
+			const response = await usersController.FindById(String(userData._id))
+
+			expect(response).toEqual(userData)
+			expect(usersService.FindById).toHaveBeenCalled()
+		})
+	})
+
 	describe('POST - Store', () => {
 		it('should create a new user and return 201', async () => {
 			const createUserDto = {
