@@ -2,6 +2,12 @@ import { IUserProps } from '@/services/getUsers.service'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+	getAvatarName,
+} from '../ui/avatar'
 import { Button } from '../ui/button'
 import {
 	DropdownMenu,
@@ -12,6 +18,22 @@ import {
 } from '../ui/dropdown-menu'
 
 export const usersColumns: ColumnDef<IUserProps>[] = [
+	{
+		id: 'avatar',
+		header: 'Avatar',
+		cell: ({ row }) => {
+			return (
+				<Avatar>
+					<AvatarImage src={row.original.avatar} />
+					<AvatarFallback>
+						<strong className="text-black dark:text-black">
+							{getAvatarName(row.original.name)}
+						</strong>
+					</AvatarFallback>
+				</Avatar>
+			)
+		},
+	},
 	{
 		accessorKey: 'name',
 		header: 'Nome',
