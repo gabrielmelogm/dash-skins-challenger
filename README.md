@@ -2,6 +2,7 @@
 > Um code test para a dashskins
 
 ## Estrutura do projeto
+```bash
 ├── apps/
 │ ├── api/
 │ │ ├── src/
@@ -12,8 +13,8 @@
 │ │ ├── src/
 │ │ │ ├── components/
 │ │ │ ├── pages/
-│ │ ├── .env
-
+│ │ ├── .env.local
+```
 
 ## Ambiente 🛠️
 - Ambos
@@ -38,13 +39,24 @@
   - Js Cookie
 
 ## Como rodar 🏁
-- 1.Crie o <code>.env</code>
+- 1. Instale as dependências
+  - Back - <code>cd ./apps/api</code>
+  ```bash
+  yarn install
+  ```
+
+  - Front - <code>cd ./apps/web</code>
+  ```bash
+  yarn install
+  ```
+
+- 2. Crie o <code>.env</code>
   - Back
-    1.Caminhe até a pasta com o back end
+    - 1. Caminhe até a pasta com o back end
     ```bash
     cd ./apps/api
     ```
-    2.Crie o arquivo <code>.env</code> com as seguintes informações
+    - 2.Crie o arquivo <code>.env</code> com as seguintes informações
     ```bash
     NODE_ENV=development
     DATABASE_URL=
@@ -53,16 +65,16 @@
     ```
 
   - Front
-    1.Caminhe até a pasta com o back end
+    - 1. Caminhe até a pasta com o back end
     ```bash
     cd ./apps/web
     ```
-    2.Crie o arquivo <code>.env.local</code> com as seguintes informações
+    - 2. Crie o arquivo <code>.env.local</code> com as seguintes informações
     ```bash
     VITE_API_URL=http://localhost:3333
     ```
 
-- 2.Na raiz do projeto rode os comandos
+- 2. Na raiz do projeto rode os comandos
 
 ```bash
 yarn run dev
@@ -81,3 +93,20 @@ yarn run dev
   ```bash
   yarn run dev:web
   ```
+
+## Testes 🧪
+> O projeto precisa estar configurado com as variáveis de ambiente as dependências
+- 1. Navegue até o backend
+```bash
+cd ./apps/api
+```
+
+### Testes unitários
+```bash
+yarn run test
+```
+
+### Testes E2E
+```bash
+yarn run test:e2e
+```
