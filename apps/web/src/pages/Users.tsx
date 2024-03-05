@@ -77,7 +77,7 @@ export function Users() {
 		<main className="w-full min-h-screen">
 			<div className="py-8 px-8 w-full flex items-center justify-between md:px-48 md:py-8 border-b border-b-zinc-700">
 				<h2 className="dark:text-white text-4xl">
-					<strong>Users</strong>
+					<strong>Usuários</strong>
 				</h2>
 
 				<div>

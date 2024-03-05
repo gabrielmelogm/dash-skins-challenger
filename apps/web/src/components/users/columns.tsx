@@ -1,3 +1,4 @@
+import { useAuthentication } from '@/hooks/useAuth'
 import { IUserProps } from '@/services/getUsers.service'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
@@ -50,6 +51,7 @@ export const usersColumns: ColumnDef<IUserProps>[] = [
 		id: 'actions',
 		cell: ({ row }) => {
 			const [searchParams, setSearchParams] = useSearchParams()
+			const { user: loggedUser } = useAuthentication()
 
 			const user = row.original
 
@@ -79,7 +81,7 @@ export const usersColumns: ColumnDef<IUserProps>[] = [
 
 			return (
 				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
+					<DropdownMenuTrigger asChild disabled={loggedUser?.sub === user._id}>
 						<Button variant="ghost">
 							<span className="sr-only">Open menu</span>
 							<MoreHorizontal className="h-4 w-4" />

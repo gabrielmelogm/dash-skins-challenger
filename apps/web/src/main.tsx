@@ -24,12 +24,14 @@ const router = createBrowserRouter([
 
 // biome-ignore lint/style/noNonNullAssertion: <explanation>
 createRoot(document.getElementById('root')!).render(
-	<AuthenticationProvider>
-		<QueryClientProvider client={queryClient}>
-			<UsersProvider>
-				<RouterProvider router={router} />,
-				<Toaster />
-			</UsersProvider>
-		</QueryClientProvider>
-	</AuthenticationProvider>,
+	<div className="bg-white dark:bg-black">
+		<AuthenticationProvider>
+			<QueryClientProvider client={queryClient}>
+				<UsersProvider>
+					<RouterProvider router={router} />,
+					<Toaster />
+				</UsersProvider>
+			</QueryClientProvider>
+		</AuthenticationProvider>
+	</div>,
 )
