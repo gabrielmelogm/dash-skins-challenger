@@ -2,9 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm'
 
 import { faker } from '@faker-js/faker'
-import { HttpException, HttpStatus } from '@nestjs/common'
+import { HttpException, HttpStatus, NotFoundException } from '@nestjs/common'
 import { ObjectId } from 'mongodb'
-import { Repository, UpdateResult } from 'typeorm'
+import { DeleteResult, Repository, UpdateResult } from 'typeorm'
 import { ormConfig, testOrmConfig } from '../../database/ormconfig'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -173,6 +173,42 @@ describe('UsersController', () => {
 
 			expect(response).toEqual(updateResult)
 			expect(usersService.Update).toHaveBeenCalledWith(userId, updateUserDto)
+		})
+	})
+
+	describe('DELETE/:id - Update', () => {
+		it('should be able delete a user', async () => {
+			const userId: string = String(new ObjectId())
+
+			const deleteResult: DeleteResult = {
+				raw: {
+					acknowledged: true,
+					deletedCount: 1,
+				},
+				affected: 1,
+			}
+
+			jest
+				.spyOn(usersService, 'Delete')
+				.mockResolvedValue(deleteResult as DeleteResult)
+
+			const response = await usersController.Delete(userId)
+
+			expect(response).toEqual(deleteResult)
+			expect(usersService.Delete).toHaveBeenCalledWith(userId)
+		})
+
+		it('should throw NotFoundException if user does not exist', async () => {
+			const userId = String(new ObjectId())
+
+			jest
+				.spyOn(usersService, 'Delete')
+				.mockRejectedValueOnce(new NotFoundException())
+
+			await expect(usersController.Delete(userId)).rejects.toThrow(
+				NotFoundException,
+			)
+			expect(usersService.Delete).toHaveBeenCalledWith(userId)
 		})
 	})
 })
