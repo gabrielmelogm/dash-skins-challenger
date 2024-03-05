@@ -1,7 +1,6 @@
 import { InputContainer } from '@/components/input/InputContainer'
-import { createUser } from '@/services/createUser.service'
+import { useUsers } from '@/hooks/useUsers'
 import { IUserProps } from '@/services/getUsers.service'
-import { updateUser } from '@/services/updateUser.service'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
@@ -57,6 +56,7 @@ export function UpdateUserModal({
 		resolver: zodResolver(inputsSchema),
 	})
 	const { toast } = useToast()
+	const { updateUser } = useUsers()
 
 	const [searchParams, setSearchParams] = useSearchParams()
 	const [isLoading, setIsLoading] = useState<boolean>(false)
