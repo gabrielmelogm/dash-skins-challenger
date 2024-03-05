@@ -61,17 +61,23 @@ export function Users() {
 
 	return (
 		<main className="w-full min-h-screen">
-			<div className="w-full flex items-center justify-between px-48 py-8 border-b border-b-zinc-700">
-				<h2 className="dark:text-white text-4xl">Users</h2>
+			<div className="py-8 px-8 w-full flex items-center justify-between md:px-48 md:py-8 border-b border-b-zinc-700">
+				<h2 className="dark:text-white text-4xl">
+					<strong>Users</strong>
+				</h2>
 
 				<div>
 					<Button onClick={handleOpenModal}>Adicionar</Button>
 				</div>
 			</div>
 
-			<div className="px-48 py-12 flex flex-col gap-6">
-				<Input type="search" name="search" placeholder="Pesquisar..." />
-				<DataTable columns={usersColumns} data={data ?? []} />
+			<div className="px-8 py-6 w-full md:px-48 md:py-12">
+				<div className="overflow-x-auto md:overflow-x-auto max-w-[1500px] min-w-[350px] flex flex-col gap-6 ">
+					<Input type="search" name="search" placeholder="Pesquisar..." />
+					<div className="min-w-[600px]">
+						<DataTable columns={usersColumns} data={data ?? []} />
+					</div>
+				</div>
 			</div>
 
 			<CreateUserModal open={Boolean(searchParams.get('modalOpen'))} />
