@@ -57,7 +57,7 @@ export function Users() {
 
 	useEffect(() => {
 		const token = Cookies.get('dashskins.token')
-		if (!token) {
+		if (!token || !user) {
 			navigate('login')
 		}
 	}, [user])
