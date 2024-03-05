@@ -215,6 +215,43 @@ describe('UsersController (e2e)', () => {
 		expect(updatedUser).toStrictEqual(expectedResponse)
 	})
 
+	it('(DELETE) /users/:id', async () => {
+		const createUserDto: CreateUserDto = {
+			name: faker.person.firstName(),
+			email: faker.internet.email(),
+			age: faker.number.int({ min: 18, max: 90 }),
+			avatar: faker.image.urlLoremFlickr(),
+			password: 'Senha@123',
+		}
+
+		const createUserResponse = await request(app.getHttpServer())
+			.post('/users')
+			.set('Authorization', authToken)
+			.send(createUserDto)
+			.expect(HttpStatus.CREATED)
+
+		expect(createUserResponse.body).toHaveProperty('_id')
+
+		const userId = createUserResponse.body._id
+
+		const expectedResponse = {
+			raw: {
+				acknowledged: true,
+				deletedCount: 1,
+			},
+			affected: 1,
+		}
+
+		const response = await request(app.getHttpServer())
+			.delete(`/users/${userId}`)
+			.set('Authorization', authToken)
+			.expect(HttpStatus.OK)
+
+		const deletedUser = response.body
+
+		expect(deletedUser).toStrictEqual(expectedResponse)
+	})
+
 	afterAll(async () => {
 		await app.close()
 	})
