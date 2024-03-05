@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import { Repository, UpdateResult } from 'typeorm'
+import { DeleteResult, Repository, UpdateResult } from 'typeorm'
 
 import { faker } from '@faker-js/faker'
 
@@ -230,7 +230,43 @@ describe('Users Service', () => {
 	})
 
 	describe('Delete', () => {
-		it.todo('should be able delete a user')
-		it.todo('should not be able delete user with wrong id')
+		it('should be able delete a user', async () => {
+			const userExist = {
+				_id: new ObjectId(),
+				name: faker.person.firstName(),
+				age: faker.number.int({ min: 18, max: 100 }),
+				email: faker.internet.email(),
+				avatar: faker.internet.url(),
+				password: hashSync(faker.internet.password(), 10),
+			}
+
+			const deleteUserId: string = String(userExist._id)
+
+			const deleteResult: DeleteResult = {
+				raw: {
+					acknowledged: true,
+					deletedCount: 1,
+				},
+				affected: 1,
+			}
+
+			jest.spyOn(usersService, 'FindById').mockResolvedValue(userExist as User)
+			jest.spyOn(usersRepository, 'delete').mockResolvedValue(deleteResult)
+
+			await expect(usersService.Delete(deleteUserId)).resolves.toEqual(
+				deleteResult,
+			)
+		})
+		it('should not be able delete user with wrong id', async () => {
+			const wrongId = faker.string.uuid()
+
+			jest
+				.spyOn(usersService, 'FindById')
+				.mockRejectedValue(new NotFoundException())
+
+			await expect(usersService.Delete(wrongId)).rejects.toThrow(
+				NotFoundException,
+			)
+		})
 	})
 })
