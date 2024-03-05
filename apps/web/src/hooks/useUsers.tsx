@@ -36,6 +36,7 @@ export function UsersProvider({ children }: { children: ReactNode }) {
 			email: user.email,
 			age: user.age,
 			avatar: user.avatar,
+			password: user.password,
 		}).then((res: IUserProps) => {
 			// Insert a new use with cache
 			queryClient.setQueryData(['getUsers'], (data: IUserProps[]) => {

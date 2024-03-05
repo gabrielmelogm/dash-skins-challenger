@@ -29,6 +29,14 @@ const inputsSchema = z.object({
 	email: z.string().email({
 		message: 'E-mail inválido',
 	}),
+	password: z
+		.string({
+			required_error: 'Campo obrigatório',
+		})
+		.regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/, {
+			message:
+				'O campo deve conter 8 caracteres incluindo letras e números, 1 letra maiúscula, 1 caractere especial',
+		}),
 	avatar: z.string().min(1, {
 		message: 'Campo obrigatório',
 	}),
@@ -133,6 +141,19 @@ export function CreateUserModal({ open = false }: IUsersModalProps) {
 								/>
 								{errors.email && (
 									<CaptionError>{errors.email?.message}</CaptionError>
+								)}
+							</InputContainer>
+
+							<InputContainer>
+								<Label htmlFor="password">Password</Label>
+								<Input
+									{...register('password')}
+									id="password"
+									name="password"
+									type="password"
+								/>
+								{errors.password && (
+									<CaptionError>{errors.password?.message}</CaptionError>
 								)}
 							</InputContainer>
 

@@ -75,7 +75,10 @@ export function AuthenticationProvider({
 						setUser(getUser)
 					}
 				})
-				.catch(() => setUser(null))
+				.catch(() => {
+					setUser(null)
+					Cookies.remove('dashskins.token')
+				})
 		}
 	}
 
