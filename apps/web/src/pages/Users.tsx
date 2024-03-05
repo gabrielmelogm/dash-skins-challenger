@@ -60,7 +60,7 @@ export function Users() {
 	}, [user])
 
 	return (
-		<main className="dark:bg-black w-full min-h-screen">
+		<main className="w-full min-h-screen">
 			<div className="w-full flex items-center justify-between px-48 py-8 border-b border-b-zinc-700">
 				<h2 className="dark:text-white text-4xl">Users</h2>
 

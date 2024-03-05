@@ -70,7 +70,7 @@ export function Login() {
 	}, [user])
 
 	return (
-		<main className="dark:bg-black w-full min-h-screen flex items-center justify-center">
+		<main className="w-full min-h-screen flex items-center justify-center">
 			<Card className="w-[450px]">
 				<CardHeader>
 					<CardTitle>Faça login</CardTitle>
