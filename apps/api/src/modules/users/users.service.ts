@@ -11,6 +11,14 @@ import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/User.entity'
 
+export type IUserResponse = {
+	_id: ObjectId
+	name: string
+	age: number
+	email: string
+	avatar: string
+}
+
 @Injectable()
 export class UsersService {
 	constructor(
@@ -31,9 +39,31 @@ export class UsersService {
 		return await this.usersRepository.save(createdUser)
 	}
 
-	async FindById(id: string): Promise<User> {
+	async FindById(id: string): Promise<IUserResponse> {
+		try {
+			const user = await this.usersRepository.findOneOrFail({
+				where: { _id: new ObjectId(id) },
+			})
+
+			if (!user) {
+				throw new NotFoundException(null)
+			}
+
+			return {
+				_id: user._id,
+				name: user.name,
+				age: user.age,
+				email: user.email,
+				avatar: user.avatar,
+			}
+		} catch (error) {
+			throw new NotFoundException(null)
+		}
+	}
+
+	async FindByEmail(email: string): Promise<User> {
 		const user = await this.usersRepository.findOneOrFail({
-			where: { _id: new ObjectId(id) },
+			where: { email },
 		})
 
 		if (!user) {
@@ -43,8 +73,21 @@ export class UsersService {
 		return user
 	}
 
-	async FindAll(): Promise<User[]> {
-		return await this.usersRepository.find()
+	async FindAll(): Promise<IUserResponse[]> {
+		const users = await this.usersRepository.find()
+		const list: IUserResponse[] = []
+
+		for (const user of users) {
+			list.push({
+				_id: user._id,
+				name: user.name,
+				age: user.age,
+				email: user.email,
+				avatar: user.avatar,
+			})
+		}
+
+		return list
 	}
 
 	async Update(id: string, user: UpdateUserDto): Promise<UpdateResult> {

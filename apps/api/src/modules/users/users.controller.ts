@@ -8,15 +8,18 @@ import {
 	Post,
 	Put,
 	Res,
+	UseGuards,
 } from '@nestjs/common'
+import { AuthGuard } from '@nestjs/passport'
 import { Response } from 'express'
 import { UpdateResult } from 'typeorm'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/User.entity'
-import { UsersService } from './users.service'
+import { IUserResponse, UsersService } from './users.service'
 
 @Controller('users')
+@UseGuards(AuthGuard('jwt'))
 export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
 
@@ -39,12 +42,12 @@ export class UsersController {
 	}
 
 	@Get()
-	async FindAll(): Promise<User[]> {
+	async FindAll(): Promise<IUserResponse[]> {
 		return await this.usersService.FindAll()
 	}
 
 	@Get(':id')
-	async FindByEmail(@Param('id') id: string): Promise<User> {
+	async FindByEmail(@Param('id') id: string): Promise<IUserResponse> {
 		return await this.usersService.FindById(id)
 	}
 

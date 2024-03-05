@@ -5,7 +5,9 @@ import { HttpStatus, INestApplication } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
+import { JwtModule } from '@nestjs/jwt'
 import { testOrmConfig } from '../src/database/ormconfig'
+import { CreateUserDto } from '../src/modules/users/dto/create-user.dto'
 import { User } from '../src/modules/users/entities/User.entity'
 import { UsersController } from '../src/modules/users/users.controller'
 import { UsersModule } from '../src/modules/users/users.module'
@@ -13,36 +15,54 @@ import { UsersService } from '../src/modules/users/users.service'
 
 describe('UsersController (e2e)', () => {
 	let app: INestApplication
+	let userService: UsersService
 
-	beforeEach(async () => {
+	beforeAll(async () => {
 		const moduleFixture: TestingModule = await Test.createTestingModule({
 			imports: [
 				TypeOrmModule.forRoot(testOrmConfig),
 				TypeOrmModule.forFeature([User]),
 				UsersModule,
+				JwtModule.register({ secret: faker.string.uuid() }),
 			],
 			controllers: [UsersController],
-			providers: [UsersService],
+			providers: [
+				{
+					provide: UsersService,
+					useValue: {
+						Store: jest.fn(),
+						FindAll: jest.fn(),
+						FindById: jest.fn(),
+						Update: jest.fn(),
+					},
+				},
+			],
 		}).compile()
 
 		app = moduleFixture.createNestApplication()
 		await app.init()
+
+		userService = moduleFixture.get<UsersService>(UsersService)
 	})
 
 	it('(POST) /users', async () => {
+		const fakeToken = faker.string.uuid()
+
+		const createUserDto: CreateUserDto = {
+			name: faker.person.firstName(),
+			email: faker.internet.email(),
+			age: faker.number.int({ min: 18, max: 90 }),
+			avatar: faker.internet.url(),
+			password: faker.internet.password(),
+		}
+
 		const response = await request(app.getHttpServer())
 			.post('/users')
-			.send({
-				name: faker.person.firstName(),
-				email: faker.internet.email(),
-				age: faker.number.int({ min: 18, max: 90 }),
-				avatar: faker.internet.url(),
-			})
+			.set('Authorization', `Bearer ${fakeToken}`)
+			.send(createUserDto)
 			.expect(HttpStatus.CREATED)
 
-		const createdUser = response.body
-
-		expect(createdUser).toHaveProperty('_id')
+		expect(userService.Store).toHaveBeenCalledWith(createUserDto)
 	})
 
 	it('(GET) /users', async () => {

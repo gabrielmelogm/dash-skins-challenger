@@ -1,20 +1,11 @@
-import { IsEmail, IsInt, IsNotEmpty, IsString, Matches } from 'class-validator'
+import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator'
 import { RegExHelper } from '../../../helpers/regex.helper'
 
-export class CreateUserDto {
+export class LoginDto {
 	@IsNotEmpty()
-	name: string
-
-	@IsNotEmpty()
-	@IsInt()
-	age: number
-
-	@IsNotEmpty()
+	@IsString()
 	@IsEmail()
 	email: string
-
-	@IsNotEmpty()
-	avatar: string
 
 	@IsNotEmpty()
 	@IsString()
