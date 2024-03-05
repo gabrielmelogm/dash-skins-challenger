@@ -6,9 +6,10 @@ import {
 	useState,
 } from 'react'
 
+import { toast } from '@/components/ui/use-toast'
 import { api } from '@/lib/api'
 import { env } from '@/lib/utils'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import Cookies from 'js-cookie'
 import { jwtDecode } from 'jwt-decode'
 
@@ -51,7 +52,20 @@ export function AuthenticationProvider({
 					setUser(jwtDecode(data.token))
 				}
 			})
-			.catch((error) => console.error(error))
+			.catch((error: AxiosError<{ message?: string }>) => {
+				if (error.response?.data?.message === 'Email or password is invalid') {
+					toast({
+						title: 'Email e/ou senha incorreto',
+						variant: 'destructive',
+					})
+					return
+				}
+				toast({
+					title: 'Houve algum problema ao logar',
+					description: 'Erro inesperado ao logar, tente novamente mais tarde',
+					variant: 'destructive',
+				})
+			})
 	}
 
 	async function validateUser() {

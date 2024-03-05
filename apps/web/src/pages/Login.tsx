@@ -1,3 +1,4 @@
+import { CaptionError } from '@/components/input/CaptionError'
 import { InputContainer } from '@/components/input/InputContainer'
 import { Button } from '@/components/ui/button'
 import {
@@ -12,6 +13,7 @@ import { Label } from '@/components/ui/label'
 import { toast } from '@/components/ui/use-toast'
 import { useAuthentication } from '@/hooks/useAuth'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { AxiosError } from 'axios'
 import Cookies from 'js-cookie'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -23,9 +25,14 @@ const inputsSchema = z.object({
 	email: z.string().email({
 		message: 'E-mail inválido',
 	}),
-	password: z.string().min(8, {
-		message: 'A senha deve ter no mínimo 8 caracteres',
-	}),
+	password: z
+		.string({
+			required_error: 'Campo obrigatório',
+		})
+		.regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/, {
+			message:
+				'O campo deve conter 8 caracteres incluindo letras e números, 1 letra maiúscula, 1 caractere especial',
+		}),
 })
 
 export type InputProps = z.infer<typeof inputsSchema>
@@ -50,16 +57,8 @@ export function Login() {
 		setIsLoading(true)
 		const fields: InputProps = data
 		await LogIn(fields.email, fields.password)
-			.then(() => {
-				navigate('/')
-			})
-			.catch(() => {
-				toast({
-					title: 'Houve algum problema ao logar',
-					description: 'Erro inesperado ao logar, tente novamente mais tarde',
-					variant: 'destructive',
-				})
-			})
+			.then(() => navigate('/'))
+			.catch((error: AxiosError) => console.error(error))
 			.finally(() => setIsLoading(false))
 	}
 
@@ -91,6 +90,9 @@ export function Login() {
 								type="email"
 								placeholder="Ex: johndoe@email.com"
 							/>
+							{errors.email && (
+								<CaptionError>{errors.email?.message}</CaptionError>
+							)}
 						</InputContainer>
 
 						<InputContainer>
@@ -101,6 +103,9 @@ export function Login() {
 								name="password"
 								type="password"
 							/>
+							{errors.password && (
+								<CaptionError>{errors.password?.message}</CaptionError>
+							)}
 						</InputContainer>
 
 						<Button
