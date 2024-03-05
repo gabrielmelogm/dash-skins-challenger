@@ -26,7 +26,7 @@ export class UsersSeed {
 				age: faker.number.int({ min: 18, max: 90 }),
 				email: 'email@test.com',
 				avatar: faker.image.urlLoremFlickr(),
-				password: hashSync('12345678', 10),
+				password: hashSync('Senha123@', 10),
 			},
 		]
 

@@ -29,7 +29,14 @@ export class UsersController {
 		@Res() response: Response,
 	): Promise<any> {
 		try {
-			return await this.usersService.Store(user)
+			const res = await this.usersService.Store(user)
+			return response.status(HttpStatus.CREATED).send({
+				_id: res._id,
+				name: res.name,
+				email: res.email,
+				age: res.age,
+				avatar: res.avatar,
+			})
 		} catch (error) {
 			if (error.message === 'User with email already exists') {
 				return response

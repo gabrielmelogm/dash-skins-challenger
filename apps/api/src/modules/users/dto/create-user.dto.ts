@@ -17,9 +17,8 @@ export class CreateUserDto {
 	avatar: string
 
 	@IsNotEmpty()
-	@IsString()
 	@Matches(RegExHelper.password, {
-		message: 'The password must be 8 caracteres',
+		message: 'The password must be 8 caracteres with special caracteres',
 	})
 	password: string
 }
