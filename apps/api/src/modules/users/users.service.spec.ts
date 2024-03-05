@@ -139,6 +139,11 @@ describe('Users Service', () => {
 		})
 	})
 
+	describe('FindByEmail', () => {
+		it.todo('should be able get a user with email')
+		it.todo('should not be able get a user with wrong email')
+	})
+
 	describe('Update', () => {
 		it('should be able update a user', async () => {
 			const userExist = {
@@ -193,5 +198,10 @@ describe('Users Service', () => {
 				NotFoundException,
 			)
 		})
+	})
+
+	describe('Delete', () => {
+		it.todo('should be able delete a user')
+		it.todo('should not be able delete user with wrong id')
 	})
 })

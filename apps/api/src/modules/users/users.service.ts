@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 
 import { ObjectId } from 'mongodb'
-import { Repository, UpdateResult } from 'typeorm'
+import { DeleteResult, Repository, UpdateResult } from 'typeorm'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/User.entity'
@@ -100,6 +100,17 @@ export class UsersService {
 			)
 
 			return updatedUser
+		}
+	}
+
+	async Delete(id: string): Promise<DeleteResult> {
+		const userSearched = await this.FindById(id)
+
+		if (userSearched) {
+			const deletedUser = await this.usersRepository.delete({
+				_id: new ObjectId(id),
+			})
+			return deletedUser
 		}
 	}
 }

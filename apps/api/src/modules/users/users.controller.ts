@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	HttpException,
 	HttpStatus,
@@ -12,7 +13,7 @@ import {
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { Response } from 'express'
-import { UpdateResult } from 'typeorm'
+import { DeleteResult, UpdateResult } from 'typeorm'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { User } from './entities/User.entity'
@@ -64,5 +65,10 @@ export class UsersController {
 		@Body() user: UpdateUserDto,
 	): Promise<UpdateResult> {
 		return await this.usersService.Update(id, user)
+	}
+
+	@Delete(':id')
+	async Delete(@Param('id') id: string): Promise<DeleteResult> {
+		return await this.usersService.Delete(id)
 	}
 }
