@@ -5,11 +5,12 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { usersColumns } from '@/components/users/columns'
 import { CreateUserModal } from '@/components/users/modal/CreateUserModal'
+import { DeleteUserModal } from '@/components/users/modal/DeleteUserModal'
 import { UpdateUserModal } from '@/components/users/modal/UpdateUserModal'
 import { useAuthentication } from '@/hooks/useAuth'
 import { useUsers } from '@/hooks/useUsers'
 import { IUserProps } from '@/services/getUsers.service'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 export function Users() {
@@ -33,7 +34,14 @@ export function Users() {
 	}
 
 	function getUserById(): IUserProps | null {
-		const userId = searchParams.get('modalEdit')
+		let userId: string | null = null
+
+		if (searchParams.get('modalEdit')) {
+			userId = searchParams.get('modalEdit')
+		}
+		if (searchParams.get('modalDelete')) {
+			userId = searchParams.get('modalDelete')
+		}
 
 		if (!userId) return null
 
@@ -69,6 +77,12 @@ export function Users() {
 			<CreateUserModal open={Boolean(searchParams.get('modalOpen'))} />
 			<UpdateUserModal
 				open={Boolean(searchParams.get('modalEdit')) && Boolean(getUserById())}
+				userSelected={getUserById()}
+			/>
+			<DeleteUserModal
+				open={
+					Boolean(searchParams.get('modalDelete')) && Boolean(getUserById())
+				}
 				userSelected={getUserById()}
 			/>
 		</main>

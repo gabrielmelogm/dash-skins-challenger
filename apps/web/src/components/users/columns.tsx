@@ -43,6 +43,18 @@ export const usersColumns: ColumnDef<IUserProps>[] = [
 				})
 			}
 
+			function handleClickDelete(userId: string) {
+				setSearchParams((state) => {
+					if (searchParams.get('modalDelete')) {
+						state.delete('modalDelete')
+						return state
+					}
+
+					state.set('modalDelete', userId)
+					return state
+				})
+			}
+
 			return (
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
@@ -56,6 +68,9 @@ export const usersColumns: ColumnDef<IUserProps>[] = [
 						<DropdownMenuLabel>Ações</DropdownMenuLabel>
 						<DropdownMenuItem onClick={() => handleClickEdit(user._id)}>
 							Editar
+						</DropdownMenuItem>
+						<DropdownMenuItem onClick={() => handleClickDelete(user._id)}>
+							Excluir
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>

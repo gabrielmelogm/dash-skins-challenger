@@ -1,6 +1,7 @@
 import { InputProps } from '@/components/users/modal/CreateUserModal'
 import { UpdateUserProps } from '@/components/users/modal/UpdateUserModal'
 import { createUser as handleCreateUser } from '@/services/createUser.service'
+import { deleteUser as handleDeleteUser } from '@/services/deleteUser.service'
 import { IUserProps, getUsers } from '@/services/getUsers.service'
 import { updateUser as handleUpdateUser } from '@/services/updateUser.service'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -11,6 +12,7 @@ interface UsersProps {
 	users: IUserProps[]
 	createUser: (user: InputProps) => Promise<void>
 	updateUser: (id: string, user: UpdateUserProps) => Promise<void>
+	deleteUser: (id: string) => Promise<void>
 }
 
 const Users = createContext({} as UsersProps)
@@ -65,8 +67,16 @@ export function UsersProvider({ children }: { children: ReactNode }) {
 		})
 	}
 
+	async function deleteUser(id: string) {
+		await handleDeleteUser(id).then(() => {
+			queryClient.invalidateQueries({
+				queryKey: ['getUsers'],
+			})
+		})
+	}
+
 	return (
-		<Users.Provider value={{ users, createUser, updateUser }}>
+		<Users.Provider value={{ users, createUser, updateUser, deleteUser }}>
 			{children}
 		</Users.Provider>
 	)
