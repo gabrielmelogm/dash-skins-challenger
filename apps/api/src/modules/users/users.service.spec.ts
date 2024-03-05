@@ -143,8 +143,33 @@ describe('Users Service', () => {
 	})
 
 	describe('FindByEmail', () => {
-		it.todo('should be able get a user with email')
-		it.todo('should not be able get a user with wrong email')
+		it('should be able get a user with email', async () => {
+			const email = faker.internet.email()
+			const user = {
+				_id: new ObjectId(),
+				name: faker.person.firstName(),
+				age: faker.number.int({ min: 18, max: 100 }),
+				email: email,
+				avatar: faker.internet.url(),
+			}
+
+			jest
+				.spyOn(usersRepository, 'findOneOrFail')
+				.mockResolvedValue(user as User)
+
+			const result = await usersService.FindByEmail(email)
+			expect(result).toEqual(user)
+		})
+
+		it('should not be able get a user with wrong email', async () => {
+			const email = faker.internet.email()
+			jest
+				.spyOn(usersRepository, 'findOneOrFail')
+				.mockRejectedValueOnce(new NotFoundException())
+			await expect(usersService.FindByEmail(email)).rejects.toBeInstanceOf(
+				NotFoundException,
+			)
+		})
 	})
 
 	describe('Update', () => {
