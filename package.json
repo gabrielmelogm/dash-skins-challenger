@@ -14,7 +14,8 @@
     "dev": "npm-run-all --parallel dev:api dev:web",
     "dev:api": "cd apps/api && npm run start:dev",
     "dev:web": "cd apps/web && npm run dev",
-    "lint": "npx @biomejs/biome check --apply-unsafe apps"
+    "lint": "npx @biomejs/biome check --apply-unsafe apps",
+    "test": "cd apps/api && npm test"
   },
   "keywords": [],
   "author": "",

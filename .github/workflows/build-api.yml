@@ -11,7 +11,26 @@ env:
   CONTAINER_ID: ${{ vars.CONTAINER_ID }}
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.x'
+      
+    - name: Install dependencies
+      run: yarn install
+
+    - name: Run tests
+      run: yarn test
+
   build:
+    needs: test
     runs-on: ubuntu-latest
     permissions:
       contents: read
