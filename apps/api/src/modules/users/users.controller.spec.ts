@@ -20,11 +20,6 @@ describe('UsersController', () => {
 
 	beforeEach(async () => {
 		const app: TestingModule = await Test.createTestingModule({
-			imports: [
-				TypeOrmModule.forRoot(testOrmConfig),
-				TypeOrmModule.forFeature([User]),
-				UsersModule,
-			],
 			controllers: [UsersController],
 			providers: [
 				UsersService,
