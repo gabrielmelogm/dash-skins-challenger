@@ -1,3 +1,7 @@
 export interface ReqUserLogin {
-	user: UserPayload
+	user: {
+		_id: string
+		email: string
+		password: string
+	}
 }

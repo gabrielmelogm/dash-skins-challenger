@@ -1,4 +1,4 @@
 interface UserPayload {
-	_id: string
+	sub: string
 	email: string
 }
