@@ -135,6 +135,32 @@ describe('UsersController', () => {
 				),
 			)
 		})
+
+		it('should return a generic error with status 400 when received unexpected error', async () => {
+			jest
+				.spyOn(usersService, 'Store')
+				.mockRejectedValue(new Error('Unexpected error'))
+
+			const createUserDto: CreateUserDto = {
+				name: faker.person.firstName(),
+				email: faker.internet.email(),
+				age: faker.number.int({ min: 18, max: 90 }),
+				avatar: faker.image.urlLoremFlickr(),
+				password: 'Senha@123',
+			}
+
+			const response = {
+				status: jest.fn().mockReturnThis(),
+				send: jest.fn(),
+			}
+
+			await usersController.Store(createUserDto, response as any)
+
+			expect(response.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST)
+			expect(response.send).toHaveBeenCalledWith(
+				new HttpException('Unexpected error', HttpStatus.BAD_REQUEST),
+			)
+		})
 	})
 
 	describe('PUT/:id - Update', () => {

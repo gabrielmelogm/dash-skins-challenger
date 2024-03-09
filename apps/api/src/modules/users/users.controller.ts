@@ -45,7 +45,9 @@ export class UsersController {
 					.send(new HttpException(error.message, HttpStatus.CONFLICT))
 			}
 
-			return new HttpException(error?.message, HttpStatus.BAD_REQUEST)
+			return response
+				.status(HttpStatus.BAD_REQUEST)
+				.send(new HttpException(error?.message, HttpStatus.BAD_REQUEST))
 		}
 	}
 
