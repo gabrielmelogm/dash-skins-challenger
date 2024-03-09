@@ -1,6 +1,3 @@
 export interface ReqUserLogin {
-	user: {
-		id: string
-		email: string
-	}
+	user: UserPayload
 }

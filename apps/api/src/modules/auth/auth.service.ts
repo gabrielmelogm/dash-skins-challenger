@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { compareSync } from 'bcrypt'
 import { User } from '../users/entities/User.entity'
@@ -11,7 +11,7 @@ export class AuthService {
 		private readonly jwtService: JwtService,
 	) {}
 
-	async login(user: User) {
+	async login(user: UserPayload) {
 		const payload = { sub: user._id, email: user.email }
 		return {
 			token: this.jwtService.sign(payload),
@@ -22,6 +22,8 @@ export class AuthService {
 		let user: User
 		try {
 			user = await this.userService.FindByEmail(email)
+
+			if (!user) throw new NotFoundException()
 		} catch (error) {
 			return null
 		}
