@@ -38,23 +38,33 @@ describe('Users Service', () => {
 
 	describe('FindAll', () => {
 		it('should be able get all users', async () => {
-			const usersResult: User[] = []
-
-			for (let i = 10; i < 10; i++) {
-				const data: User = {
+			const users: User[] = [
+				{
 					_id: new ObjectId(),
 					name: faker.person.firstName(),
 					email: faker.internet.email(),
 					age: faker.number.int({ min: 18, max: 90 }),
 					avatar: faker.internet.url(),
-					createdAt: String(faker.date.recent()),
-					updatedAt: String(faker.date.recent()),
-				}
-				usersResult.push(data)
-			}
+				},
+				{
+					_id: new ObjectId(),
+					name: faker.person.firstName(),
+					email: faker.internet.email(),
+					age: faker.number.int({ min: 18, max: 90 }),
+					avatar: faker.internet.url(),
+				},
+			]
 
-			jest.spyOn(usersRepository, 'find').mockResolvedValue(usersResult)
-			await expect(usersService.FindAll()).resolves.toEqual(usersResult)
+			jest.spyOn(usersRepository, 'find').mockResolvedValue(users)
+
+			await expect(usersService.FindAll()).resolves.toEqual(users)
+
+			expect(users).toEqual(
+				expect.arrayContaining([
+					expect.objectContaining(users[0]),
+					expect.objectContaining(users[1]),
+				]),
+			)
 		})
 
 		it('should return an empty array if no users are found', async () => {

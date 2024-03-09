@@ -78,9 +78,10 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
-    "testPathIgnorePatterns": [
+    "coveragePathIgnorePatterns": [
       "/node_modules/",
-      "/coverage/"
+      "/coverage/",
+      "\\.module\\."
     ]
   }
 }
