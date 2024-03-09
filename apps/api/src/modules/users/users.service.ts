@@ -45,10 +45,6 @@ export class UsersService {
 				where: { _id: new ObjectId(id) },
 			})
 
-			if (!user) {
-				throw new NotFoundException(null)
-			}
-
 			return {
 				_id: user._id,
 				name: user.name,
@@ -62,15 +58,15 @@ export class UsersService {
 	}
 
 	async FindByEmail(email: string): Promise<User> {
-		const user = await this.usersRepository.findOneOrFail({
-			where: { email },
-		})
+		try {
+			const user = await this.usersRepository.findOneOrFail({
+				where: { email },
+			})
 
-		if (!user) {
+			return user
+		} catch (error) {
 			throw new NotFoundException(null)
 		}
-
-		return user
 	}
 
 	async FindAll(): Promise<IUserResponse[]> {
