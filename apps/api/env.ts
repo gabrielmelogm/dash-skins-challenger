@@ -1,7 +1,10 @@
 import { ConfigModule } from '@nestjs/config'
 import { z } from 'zod'
 
-ConfigModule.forRoot()
+const envFileName = `.env.${process.env.NODE_ENV || 'development'}`
+ConfigModule.forRoot({
+	envFilePath: envFileName,
+})
 
 const nodeEnv = z.enum(['development', 'production', 'test'])
 
