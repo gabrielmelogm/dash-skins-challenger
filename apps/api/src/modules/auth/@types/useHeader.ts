@@ -1,5 +1,7 @@
-import { LoginDto } from '../dto/login.dto'
-
 export interface ReqUserLogin {
-	user: LoginDto
+	user: {
+		_id: string
+		email: string
+		password: string
+	}
 }
