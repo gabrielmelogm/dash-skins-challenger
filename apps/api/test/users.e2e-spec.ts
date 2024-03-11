@@ -53,15 +53,6 @@ describe('UsersController (e2e)', () => {
 					password: user.password,
 				})
 			})
-
-		const response = await request(app.getHttpServer())
-			.post('/auth/login')
-			.send({ email: user.email, password: user.password })
-			.expect(HttpStatus.CREATED)
-
-		expect(response.body).toHaveProperty('token')
-
-		authToken = `Bearer ${response.body.token}`
 	})
 
 	beforeEach(async () => {
@@ -78,6 +69,15 @@ describe('UsersController (e2e)', () => {
 
 		app = moduleFixture.createNestApplication()
 		await app.init()
+
+		const response = await request(app.getHttpServer())
+			.post('/auth/login')
+			.send({ email: user.email, password: user.password })
+			.expect(HttpStatus.CREATED)
+
+		expect(response.body).toHaveProperty('token')
+
+		authToken = `Bearer ${response.body.token}`
 	})
 
 	it('(POST) /users', async () => {
@@ -255,6 +255,10 @@ describe('UsersController (e2e)', () => {
 			.get(`/users/${userId}`)
 			.set('Authorization', authToken)
 			.expect(HttpStatus.NOT_FOUND)
+	})
+
+	afterEach(() => {
+		authToken = null
 	})
 
 	afterAll(async () => {

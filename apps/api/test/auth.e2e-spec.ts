@@ -2,7 +2,6 @@ import { HttpStatus, INestApplication } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { hashSync } from 'bcrypt'
 import * as request from 'supertest'
 import { testOrmConfig } from '../src/database/ormconfig'
 import { AuthModule } from '../src/modules/auth/auth.module'
@@ -48,13 +47,20 @@ describe('Auth (e2e)', () => {
 			})
 	})
 
-	it('(POST) /auth/login - autentica o usuário e retorna o token JWT', async () => {
+	it('(POST) /auth/login - auth user and return token', async () => {
 		const response = await request(app.getHttpServer())
 			.post('/auth/login')
 			.send({ email: user.email, password: user.password })
 			.expect(HttpStatus.CREATED)
 
 		expect(response.body).toHaveProperty('token')
+	})
+
+	it('(POST) /auth/login - return error because has a invalid email', async () => {
+		const response = await request(app.getHttpServer())
+			.post('/auth/login')
+			.send({ email: 'invalid_email', password: user.password })
+			.expect(HttpStatus.UNAUTHORIZED)
 	})
 
 	afterAll(async () => {
