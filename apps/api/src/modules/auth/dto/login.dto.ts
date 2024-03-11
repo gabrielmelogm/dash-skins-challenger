@@ -1,7 +1,16 @@
-import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator'
+import {
+	IsEmail,
+	IsNotEmpty,
+	IsOptional,
+	IsString,
+	Matches,
+} from 'class-validator'
 import { RegExHelper } from '../../../helpers/regex.helper'
 
 export class LoginDto {
+	@IsOptional()
+	_id: string
+
 	@IsNotEmpty()
 	@IsString()
 	@IsEmail()
