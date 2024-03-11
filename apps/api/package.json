@@ -81,7 +81,10 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/coverage/",
-      "\\.module\\."
+      "\\.module\\.",
+      "/ormconfig.ts",
+      "/main.ts",
+      "/seed.ts"
     ]
   }
 }

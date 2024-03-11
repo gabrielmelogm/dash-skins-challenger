@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core'
 import { AppModule } from '../../app.module'
 import { UsersSeed } from './users.seed'
 
-async function main() {
+export async function main(): Promise<void> {
 	const app = await NestFactory.createApplicationContext(AppModule)
 	const usersSeed = app.get(UsersSeed)
 
