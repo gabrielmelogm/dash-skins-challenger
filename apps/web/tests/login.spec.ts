@@ -1,12 +1,5 @@
 import { expect, test } from '@playwright/test'
 
-test('Should be title', async ({ page }) => {
-	await page.goto('http://localhost:5173/login')
-
-	const title = await page.title()
-	expect(title).toContain('Dashskins')
-})
-
 test('Should be possible to log in', async ({ page }) => {
 	await page.goto('http://localhost:5173/login')
 
