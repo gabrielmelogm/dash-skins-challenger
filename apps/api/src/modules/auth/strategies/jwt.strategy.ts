@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { z } from 'zod'
 import { env } from '../../../../env'
+import { UserPayload } from '../userPayload'
 
 export class JwtStrategy extends PassportStrategy(Strategy) {
 	constructor() {

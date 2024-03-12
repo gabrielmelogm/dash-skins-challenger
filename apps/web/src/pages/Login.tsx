@@ -73,7 +73,7 @@ export function Login() {
 		<main className="w-full min-h-screen flex items-center justify-center">
 			<Card className="w-[450px]">
 				<CardHeader>
-					<CardTitle>Faça login</CardTitle>
+					<CardTitle id="test_TitleLogin">Faça login</CardTitle>
 					<CardDescription>Use seu email e senha para logar</CardDescription>
 				</CardHeader>
 				<CardContent>
