@@ -68,7 +68,10 @@ export function DeleteUserModal({
 
 	return (
 		<AlertDialog open={open} onOpenChange={handleCloseModal}>
-			<AlertDialogContent className="dark:bg-dark-background dark:text-white">
+			<AlertDialogContent
+				className="dark:bg-dark-background dark:text-white"
+				id="deleteDialog"
+			>
 				<AlertDialogHeader>
 					<AlertDialogTitle>Essa ação é irreversível</AlertDialogTitle>
 					<AlertDialogDescription>

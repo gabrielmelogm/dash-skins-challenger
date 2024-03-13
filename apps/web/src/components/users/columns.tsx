@@ -99,7 +99,10 @@ export const usersColumns: ColumnDef<IUserProps>[] = [
 						>
 							Editar
 						</DropdownMenuItem>
-						<DropdownMenuItem onClick={() => handleClickDelete(user._id)}>
+						<DropdownMenuItem
+							onClick={() => handleClickDelete(user._id)}
+							data-test-id={`deleteTrigger-${user.email}`}
+						>
 							Excluir
 						</DropdownMenuItem>
 					</DropdownMenuContent>
