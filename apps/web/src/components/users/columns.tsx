@@ -82,7 +82,10 @@ export const usersColumns: ColumnDef<IUserProps>[] = [
 			return (
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild disabled={loggedUser?.sub === user._id}>
-						<Button variant="ghost">
+						<Button
+							variant="ghost"
+							data-test-id={`actionTrigger-${user.email}`}
+						>
 							<span className="sr-only">Open menu</span>
 							<MoreHorizontal className="h-4 w-4" />
 						</Button>
@@ -90,7 +93,10 @@ export const usersColumns: ColumnDef<IUserProps>[] = [
 
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Ações</DropdownMenuLabel>
-						<DropdownMenuItem onClick={() => handleClickEdit(user._id)}>
+						<DropdownMenuItem
+							onClick={() => handleClickEdit(user._id)}
+							data-test-id={`editTrigger-${user.email}`}
+						>
 							Editar
 						</DropdownMenuItem>
 						<DropdownMenuItem onClick={() => handleClickDelete(user._id)}>

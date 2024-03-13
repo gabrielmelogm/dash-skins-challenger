@@ -1,7 +1,7 @@
 import { fakerPT_BR as faker } from '@faker-js/faker'
 import { expect, test } from 'playwright/test'
 
-test('Should be create a new user', async ({ page }) => {
+test('Should be edit a user', async ({ page }) => {
 	const user = {
 		name: faker.person.firstName(),
 		age: faker.number.int({ min: 18, max: 90 }),
@@ -48,7 +48,44 @@ test('Should be create a new user', async ({ page }) => {
 
 	expect(toast).toBeVisible()
 
-	const row = await page.getByText(user.name)
+	const row = await page.locator(`data-test-id=${user.email}`)
 
 	expect(row).toBeVisible()
+
+	const trigger = await page.locator(`data-test-id=actionTrigger-${user.email}`)
+
+	trigger.click()
+
+	await page
+		.locator(`data-test-id=editTrigger-${user.email}`, {
+			hasText: 'Editar',
+		})
+		.click()
+
+	const editModal = await page.locator('id=editModal')
+
+	expect(editModal).toBeVisible()
+
+	const titleEditModal = await page.getByText('Editar usuário')
+
+	expect(titleEditModal).toBeVisible()
+
+	await page.getByLabel('Nome').fill(faker.person.firstName())
+	await page
+		.getByLabel('Idade')
+		.fill(String(faker.number.int({ min: 10, max: 50 })))
+	await page.getByLabel('Email').fill(faker.internet.email())
+	await page.getByLabel('Avatar').fill(faker.image.urlLoremFlickr())
+
+	await page.getByRole('button', { name: 'Atualizar' }).click()
+
+	await page.waitForResponse((response) => response.status() === 200)
+
+	await new Promise((resolve) => setTimeout(() => resolve(true), 2000))
+
+	expect(editModal).toBeHidden()
+
+	const toastEditModal = await page.getByText('Usuário atualizado com sucesso!')
+
+	expect(toastEditModal).toBeVisible()
 })

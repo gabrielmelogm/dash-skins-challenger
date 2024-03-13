@@ -104,7 +104,7 @@ export function UpdateUserModal({
 
 	return (
 		<Dialog open={open} onOpenChange={handleCloseModal}>
-			<DialogContent>
+			<DialogContent id="editModal">
 				<div className="w-[16px] h-[16px] rounded bg-white absolute top-4 right-4"></div>
 				<Card>
 					<CardHeader>

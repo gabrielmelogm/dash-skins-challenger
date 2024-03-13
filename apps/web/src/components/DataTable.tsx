@@ -61,6 +61,7 @@ export function DataTable<TData, TValue>({
 
 							return (
 								<TableRow
+									data-test-id={row.original.email}
 									key={row.id}
 									data-state={row.getIsSelected() && 'selected'}
 									className={`${
